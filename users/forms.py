@@ -9,7 +9,13 @@ class Registration_Form(forms.ModelForm):
 
     class Meta:
         model = User
-        exclude = ['last_login', 'is_admin', 'is_active', 'created_at', 'updated_at'],
+        fields = [
+            'username',
+            'email',
+            'phone',
+            'department',
+            'role',
+        ]
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -40,9 +46,9 @@ class Registration_Form(forms.ModelForm):
             username=data['username'],
             email=data['email'],
             phone=data['phone'],
-            passwrod=data['password'],
+            password=data['password'],
             role=data['role'],
-            dapartment=data['department']
+            department=data['department']
         )
 
         return user
