@@ -58,6 +58,17 @@ class Login_Form(AuthenticationForm):
     password = forms.CharField(widget=forms.PasswordInput)
 
 class Profile_UpdateForm(forms.ModelForm):
+    birthday = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     class Meta:
         model = Profile
-        exclude = ['user', 'created_at', 'updated_at']
+        fields = [
+            'first_name',
+            'last_name',
+            'image',
+            'position',
+            'hired_as',
+            'monthly_wage',
+            'birthday',
+            'address',
+            'bio'
+        ]

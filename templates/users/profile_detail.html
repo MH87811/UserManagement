@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Profile</title>
+</head>
+<body>
+<p>{{ profile.first_name }}</p>
+<p>{{ profile.last_name }}</p>
+<p><img src="{{ profile.image.url }}" alt=""></p>
+<p>{{ profile.position }}</p>
+<p>{{ profile.hired_as }}</p>
+<p>{{ profile.monthly_wage }}</p>
+<p>{{ profile.birthday }}</p>
+<p>{{ profile.address }}</p>
+<p>{{ profile.bio }}</p>
+<p>{{ profile.user.username }}</p>
+</body>
+</html>

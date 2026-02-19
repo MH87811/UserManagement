@@ -10,11 +10,14 @@ from .forms import *
 
 # Create your views here.
 
+def DashboardView(request):
+    return render(request, 'dashboard.html')
+
 class Register_View(FormView):
     template_name = 'users/register.html'
     form_class = Registration_Form
-    success_url = reverse_lazy('users:dashboard')
 
+    success_url = reverse_lazy('users:dashboard')
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
@@ -32,12 +35,22 @@ class Logout_View(LogoutView):
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
-    form_classes = Profile_UpdateForm
+    form_class = Profile_UpdateForm
     template_name = 'users/profile_update.html'
-    success_url = reverse_lazy('users:profile')
 
+    success_url = reverse_lazy('users:profile')
     def get_object(self):
         return self.request.user.profile
 
-def DashboardView(request):
-    return render(request, 'dashboard.html')
+    def form_valid(self, form):
+        messages.success(self.request, 'profile updated')
+        return super().form_valid(form)
+
+class ProfileView(LoginRequiredMixin, ListView):
+    template_name = 'users/profile_detail.html'
+    model = Profile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile'] = Profile.objects.get(user=self.request.user)
+        return context
