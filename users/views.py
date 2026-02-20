@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -27,11 +27,15 @@ class Register_View(FormView):
 class Login_View(LoginView):
     template_name = 'users/login.html'
     from_classes = Login_Form
-    def get_success_url(self):
-        return reverse_lazy('users:dashboard')
+    success_url = reverse_lazy('users:dashboard')
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('users:dashboard')
+        return super().dispatch(request, *args, **kwargs)
 
 class Logout_View(LogoutView):
-    next_page = reverse_lazy('login')
+    next_page = reverse_lazy('users:login')
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
@@ -39,8 +43,8 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'users/profile_update.html'
 
     success_url = reverse_lazy('users:profile')
-    def get_object(self):
-        return self.request.user.profile
+    def get_queryset(self):
+        return Profile.objects.get(user=self.request.user)
 
     def form_valid(self, form):
         messages.success(self.request, 'profile updated')
@@ -54,3 +58,11 @@ class ProfileView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['profile'] = Profile.objects.get(user=self.request.user)
         return context
+
+class DisplayProfileView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = 'users/profile_detail.html'
+
+    def get_object(self):
+        pk = self.kwargs['id']
+        return get_object_or_404(Profile, id=pk)

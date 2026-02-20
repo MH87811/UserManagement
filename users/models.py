@@ -67,6 +67,12 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['phone', 'email']
 
+    def has_perm(self, app_label):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
     @property
     def is_staff(self):
         return self.is_admin
@@ -78,7 +84,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', null=True, blank=True)
     first_name = models.CharField(max_length=64, null=True, blank=True)
     last_name = models.CharField(max_length=64, null=True, blank=True)
-    image = models.ImageField(upload_to='profile_image/', null=True, blank=True)
+    image = models.ImageField(upload_to='profile_image/', default='default.png', null=True, blank=True)
     position = models.CharField(max_length=64, null=True, blank=True)
     hired_as = models.CharField(max_length=64, null=True, blank=True)
     monthly_wage = models.IntegerField(null=True, blank=True)
